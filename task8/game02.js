@@ -17,8 +17,6 @@
     const myResult = (secret, answer, rangeA, rangeB) => {
         let newAnswer = parseInt(answer, 10);
         const maxAnswers = (Math.abs(rangeA - rangeB) <= 50) ? 15 : Math.ceil(Math.abs(rangeA - rangeB) * 0.6);
-        //console.log("maxAnswers", maxAnswers);
-
         let answers = [];
 
         while (true) {
@@ -35,8 +33,6 @@
             } else{
                 alert("Это число вы уже вводили.");
             }
-
-            //console.log(answers)
 
             if (newAnswer > secret) {
                 newAnswer = prompt("Меньше.");
