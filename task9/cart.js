@@ -12,8 +12,8 @@
         add(name, price, count = 1){
 
             this.items.push([name, price, count]);
-            cart.totalPrice = this.calculateItemPrice();
-            cart.count = this.increaseCount(count);
+            this.totalPrice = this.calculateItemPrice();
+            this.count = this.increaseCount(count);
         },
         increaseCount(count){
             return this.count + count;
