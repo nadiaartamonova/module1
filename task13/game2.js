@@ -11,9 +11,13 @@
     return Math.floor(Math.random() * (max - min + 1) + min);
   };
 
+  
+
+
   const getFigure = (language, valueUser = 0, valueComp = 0) => {
     const translations = {
       ENG: {
+        items: ['rock', 'scissors', 'paper'],
         start: `Input: ${FIRUGE_ENG.join(', ')}`,
         tie: `Tie \n User: ${valueUser}\n Comp: ${valueComp}`,
         userWin: `Win :) \n User: ${valueUser}\n Comp: ${valueComp}`,
@@ -22,6 +26,7 @@
         exit: `Are you sure want to exit?`,
       },
       RUS: {
+        items: ['камень', 'ножницы', 'бумага'],
         start: `Введите: ${FIRUGE_RUS.join(', ')}`,
           tie: `Ничья \n Игрок: ${valueUser}\n Комп: ${valueComp}`,
           userWin: `Выйграл :) \n Игрок: ${valueUser}\n Комп: ${valueComp}`,
@@ -30,41 +35,51 @@
           exit: `Точно ли вы хотите выйти?`,
       },
     };
+    const rules = {
+      камень: {
+        ножницы: true,
+        бумага: false,
+      },
+      ножницы: {
+        бумага: true,
+        камень: false,
+      },
+      бумага: {
+        камень: true,
+        ножницы: false,
+      },
+      rock: {
+        scissors: true,
+        paper: false,
+      },
+      scissors: {
+        paper: true,
+        rock: false,
+      },
+      paper: {
+        rock: true,
+        scissors: false,
+      },
+    };
 
       const choise = {
         prop: '',
-        items: ['камень', 'ножницы', 'бумага'],
         text : translations[language],
         defineChoise(value) {
           if (value === 's' || value.substring().includes('sci') 
               || value === 'н' || value.substring().includes('нож')) {
-            this.prop = 'ножницы';
+            this.prop = translations[language].items[1];
           } else if (value === 'p' || value.substring().includes('pap') 
                     || value === 'б' || value.substring().includes('бум')) {
-            this.prop = 'бумага';
+            this.prop = translations[language].items[2];
           } else if (value === 'r' || value.substring().includes('roc')
                     || value === 'к' || value.substring().includes('кам')) {
-            this.prop = 'камень';
+            this.prop = translations[language].items[0];
           }
         },
-        controll(user, comp) {
-          switch (user) {
-            case 'камень':
-              if (comp === 'бумага') {
-                return false;
-              }
-              return true;
-            case 'бумага':
-              if (comp === 'ножницы') {
-                return false;
-              }
-              return true;
-            case 'ножницы':
-              if (comp === 'камень') {
-                return false;
-              }
-              return true;
-          }
+        controll(comp) {
+          const result = rules[this.prop][comp];
+          return result;
         },
 
       };
@@ -78,7 +93,6 @@
     };
 
     return function start() {
-
       let choise = getFigure(language, result.player, result.computer);
       console.log(choise)
       const answer = prompt(`${choise.text.start}`);
@@ -95,12 +109,12 @@
 
       if (choise.prop !== '') {
         const guess = getRandomIntInclusive(0, 2);
-        console.log(`user = ${choise.prop} - ${choise.items[guess]}`);
+        console.log(`user = ${choise.prop} - ${choise.text.items[guess]}`);
 
-        if (choise.prop === choise.items[guess]) {
+        if (choise.prop === choise.text.items[guess]) {
           alert(`${choise.text.tie}`);
         } else {
-          const controllResult = choise.controll(choise.prop, choise.items[guess]);
+          const controllResult = choise.controll(choise.text.items[guess]);
           if (controllResult) {
             result.player += 1;
             choise = getFigure(language, result.player, result.computer);
