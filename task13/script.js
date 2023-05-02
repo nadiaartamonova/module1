@@ -4,7 +4,7 @@ const lang = prompt('Language:');
 if (lang.toUpperCase === 'ENG' || lang.toUpperCase('EN')) {
   console.log('scritp', lang);
   // eslint-disable-next-line new-cap
-  const startGame = window.RPS('EN');
+  const startGame = window.RPS('ENG');
   startGame();
 } else {
   console.log('scritp', lang);

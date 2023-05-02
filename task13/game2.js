@@ -11,122 +11,104 @@
     return Math.floor(Math.random() * (max - min + 1) + min);
   };
 
-  const controll = (user, comp) => {
-    switch (user) {
-      case 'камень':
-        if (comp === 'бумага') {
-          return false;
-        }
-        return true;
-      case 'бумага':
-        if (comp === 'ножницы') {
-          return false;
-        }
-        return true;
-      case 'ножницы':
-        if (comp === 'камень') {
-          return false;
-        }
-        return true;
-    }
-  };
-
-
   const getFigure = (language, valueUser = 0, valueComp = 0) => {
-    // eslint-disable-next-line max-len
-    const lang = language === 'EN' || language === 'ENG' ? FIRUGE_ENG : FIRUGE_RUS;
-
-    if (language === 'EN') {
-      const userInterfaceEng = {
-        start: `Input: ${lang.join(', ')}`,
+    const translations = {
+      ENG: {
+        start: `Input: ${FIRUGE_ENG.join(', ')}`,
         tie: `Tie \n User: ${valueUser}\n Comp: ${valueComp}`,
         userWin: `Win :) \n User: ${valueUser}\n Comp: ${valueComp}`,
         compWin: `Loss :( \n User: ${valueUser}\n Comp: ${valueComp}`,
         result: `Result:\nUser: ${valueUser}\nComp: ${valueComp}`,
         exit: `Are you sure want to exit?`,
+      },
+      RUS: {
+        start: `Введите: ${FIRUGE_RUS.join(', ')}`,
+          tie: `Ничья \n Игрок: ${valueUser}\n Комп: ${valueComp}`,
+          userWin: `Выйграл :) \n Игрок: ${valueUser}\n Комп: ${valueComp}`,
+          compWin: `Проиграл :( \n Игрок: ${valueUser}\n Комп: ${valueComp}`,
+          result: `Конечный счет:\nИгрок: ${valueUser}\nКомп: ${valueComp}`,
+          exit: `Точно ли вы хотите выйти?`,
+      },
+    };
+
+      const choise = {
+        prop: '',
+        items: ['камень', 'ножницы', 'бумага'],
+        text : translations[language],
+        defineChoise(value) {
+          if (value === 's' || value.substring().includes('sci') 
+              || value === 'н' || value.substring().includes('нож')) {
+            this.prop = 'ножницы';
+          } else if (value === 'p' || value.substring().includes('pap') 
+                    || value === 'б' || value.substring().includes('бум')) {
+            this.prop = 'бумага';
+          } else if (value === 'r' || value.substring().includes('roc')
+                    || value === 'к' || value.substring().includes('кам')) {
+            this.prop = 'камень';
+          }
+        },
+        controll(user, comp) {
+          switch (user) {
+            case 'камень':
+              if (comp === 'бумага') {
+                return false;
+              }
+              return true;
+            case 'бумага':
+              if (comp === 'ножницы') {
+                return false;
+              }
+              return true;
+            case 'ножницы':
+              if (comp === 'камень') {
+                return false;
+              }
+              return true;
+          }
+        },
+
       };
-      return userInterfaceEng;
-    } else {
-      const userInterfaceRus = {
-        start: `Введите: ${lang.join(', ')}`,
-        tie: `Ничья \n Игрок: ${valueUser}\n Комп: ${valueComp}`,
-        userWin: `Выйграл :) \n Игрок: ${valueUser}\n Комп: ${valueComp}`,
-        compWin: `Проиграл :( \n Игрок: ${valueUser}\n Комп: ${valueComp}`,
-        result: `Конечный счет:\nИгрок: ${valueUser}\nКомп: ${valueComp}`,
-        exit: `Точно ли вы хотите выйти?`,
-      };
-      return userInterfaceRus;
-    }
+      return choise;
   };
 
   const game = (language = 'RUS') => {
     const result = {
       player: 0,
       computer: 0,
-      language,
     };
 
     return function start() {
-      console.log('start', language);
-      let lang = getFigure(language, result.player, result.computer);
 
-      const answer = prompt(`${lang.start}`);
+      let choise = getFigure(language, result.player, result.computer);
+      console.log(choise)
+      const answer = prompt(`${choise.text.start}`);
 
       if (answer === null) {
-        const answer = confirm(`${lang.exit}`);
-        if (answer) {
-          alert(`${lang.result}`);
+        const a = confirm(`${choise.text.exit}`);
+        if (a) {
+          alert(`${choise.text.result}`);
           return;
         }
       }
 
+      choise.defineChoise(answer.toLowerCase());
 
-      answer.toLowerCase();
-
-      const userRes = {
-        prop: '',
-        defineChoiceRus(value) {
-          if (value === 'н' || value.substring().includes('нож')) {
-            this.prop = 'ножницы';
-          } else if (value === 'б' || value.substring().includes('бум')) {
-            this.prop = 'бумага';
-          } else if (value === 'к' || value.substring().includes('кам')) {
-            this.prop = 'камень';
-          }
-        },
-        defineChoiceEng(value) {
-          if (value === 's' || value.substring().includes('sci')) {
-            this.prop = 'ножницы';
-          } else if (value === 'p' || value.substring().includes('pap')) {
-            this.prop = 'бумага';
-          } else if (value === 'r' || value.substring().includes('roc')) {
-            this.prop = 'камень';
-          }
-        },
-
-      };
-      if (language === 'EN') {
-        userRes.defineChoiceEng(answer);
-      } else {
-        userRes.defineChoiceRus(answer);
-      }
-
-      if (userRes.prop !== '') {
+      if (choise.prop !== '') {
         const guess = getRandomIntInclusive(0, 2);
-        console.log(`user = ${userRes.prop} - ${FIRUGE_RUS[guess]}`);
+        console.log(`user = ${choise.prop} - ${choise.items[guess]}`);
 
-        if (userRes.prop === FIRUGE_RUS[guess]) {
-          alert(`${lang.tie}`);
+        if (choise.prop === choise.items[guess]) {
+          alert(`${choise.text.tie}`);
         } else {
-          const controllResult = controll(userRes.prop, FIRUGE_RUS[guess]);
+          const controllResult = choise.controll(choise.prop, choise.items[guess]);
           if (controllResult) {
             result.player += 1;
-            lang = getFigure(language, result.player, result.computer);
-            alert(`${lang.userWin}`);
+            choise = getFigure(language, result.player, result.computer);
+            alert(`${choise.text.userWin}`);
           } else {
             result.computer += 1;
-            lang = getFigure(language, result.player, result.computer);
-            alert(`${lang.compWin}`);
+            choise = getFigure(language, result.player, result.computer);
+            alert(`${choise.text.compWin}`);
           }
         }
       }
