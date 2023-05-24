@@ -66,14 +66,15 @@
         prop: '',
         text : translations[language],
         defineChoise(value) {
-          if (value === 's' || value.substring().includes('sci') 
-              || value === 'н' || value.substring().includes('нож')) {
+          const sciRegExp = /^s|sci|^н|нож/i;
+          const papRegExp = /^p|pap|^б|бум/i;
+          const rocRegExp = /^r|roc|^к|кам/i;
+
+          if (sciRegExp.test(value)) {
             this.prop = translations[language].items[1];
-          } else if (value === 'p' || value.substring().includes('pap') 
-                    || value === 'б' || value.substring().includes('бум')) {
+          } else if (papRegExp.test(value)) {
             this.prop = translations[language].items[2];
-          } else if (value === 'r' || value.substring().includes('roc')
-                    || value === 'к' || value.substring().includes('кам')) {
+          } else if (rocRegExp.test(value)) {
             this.prop = translations[language].items[0];
           }
         },
@@ -94,7 +95,7 @@
 
     return function start() {
       let choise = getFigure(language, result.player, result.computer);
-      console.log(choise)
+      //console.log(choise)
       const answer = prompt(`${choise.text.start}`);
 
       if (answer === null) {
